@@ -1,0 +1,44 @@
+[project]
+name = "fastapi-starter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [{ name = "A K M Shafiul Hasan", email = "akmshasan@gmail.com" }]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.141.1",
+    "uvicorn[standard]>=0.53.0",
+]
+
+[project.scripts]
+fastapi-starter = "fastapi_starter:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "pytest-asyncio>=1.4.0",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.16.8",
+    "httpx2>=2.13.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["migrations", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["PLR0913", "PLR0917", "CPY001", "D100", "D104", "S104", "COM812", "D203", "D213"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+filterwarnings = [
+    "ignore:The anyio\\.abc\\.BlockingPortal alias is deprecated:DeprecationWarning",
+]
+

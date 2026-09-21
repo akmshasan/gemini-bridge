@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/akmshasan/gemini-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/akmshasan/gemini-bridge/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/downloads/)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/akmshasan/gemini-bridge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
@@ -15,7 +16,7 @@
 - ⚡ **Gemini 2.0 / Flash Support**: Fast text completions and Server-Sent Events (SSE) token streaming via Google's official `google-genai` SDK.
 - 🔍 **Embedded RAG & Vector Search**: In-process ChromaDB vector store (`./data/chroma`) with automatic text chunking and cosine similarity retrieval.
 - 🚫 **Zero Docker Needed**: Runs purely in Python using embedded persistent file storage (optional Dockerfile and docker-compose also included for deployment).
-- 🛡️ **Type-Safe & Tested**: Built on FastAPI, Pydantic v2, and `pydantic-settings` with 92%+ automated test coverage.
+- 🛡️ **Type-Safe & Tested**: Built on FastAPI, Pydantic v2, and `pydantic-settings` with 100% automated test coverage.
 - 📂 **Bulk Folder Ingestion CLI**: Recursively ingest directories of Markdown, text, and source code files directly into your knowledge base with a single command.
 - 📖 **Interactive OpenAPI Docs**: Complete Swagger UI available out of the box at `/docs`.
 

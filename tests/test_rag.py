@@ -9,6 +9,7 @@ from pytest_mock import MockerFixture
 from gemini_bridge.core.config import Settings, get_settings
 from gemini_bridge.main import app
 from gemini_bridge.services.gemini import GeminiService
+from gemini_bridge.services.rag import RAGService
 from gemini_bridge.services.vector_store import VectorStoreService
 
 client = TestClient(app)
@@ -176,5 +177,39 @@ async def test_rag_ingest_and_query_flow(mocker: MockerFixture, tmp_path: Path) 
         # 5. Verify list is now empty
         list_after = client.get("/api/v1/rag/documents")
         assert list_after.json()["total_chunks"] == 0
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_rag_endpoint_errors(mocker: MockerFixture) -> None:
+    """Test 500 error responses from RAG endpoints when service calls raise exceptions."""
+    test_settings = Settings(gemini_api_key="mock_key")
+    app.dependency_overrides[get_settings] = lambda: test_settings
+
+    try:
+        # Ingest error
+        mocker.patch.object(RAGService, "ingest_text", side_effect=RuntimeError("Disk full"))
+        res = client.post("/api/v1/rag/ingest", json={"content": "text", "source": "test.txt"})
+        assert res.status_code == 500
+        assert "Ingestion failed" in res.json()["detail"]
+
+        # Query error
+        mocker.patch.object(RAGService, "query", side_effect=RuntimeError("Search error"))
+        res = client.post("/api/v1/rag/query", json={"question": "test?"})
+        assert res.status_code == 500
+        assert "Query failed" in res.json()["detail"]
+
+        # List error
+        mocker.patch.object(RAGService, "list_documents", side_effect=RuntimeError("Read error"))
+        res = client.get("/api/v1/rag/documents")
+        assert res.status_code == 500
+        assert "Failed to list documents" in res.json()["detail"]
+
+        # Clear error
+        mocker.patch.object(RAGService, "clear", side_effect=RuntimeError("Lock error"))
+        res = client.delete("/api/v1/rag/documents")
+        assert res.status_code == 500
+        assert "Failed to clear knowledge base" in res.json()["detail"]
     finally:
         app.dependency_overrides.clear()

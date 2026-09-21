@@ -15,7 +15,7 @@ lock: ## Update and lock dependencies
 	uv lock
 
 run: ## Run the application
-	uv run fastapi-starter
+	uv run agent-gateway
 
 test: ## Run test suite
 	uv run pytest

@@ -18,3 +18,6 @@ htmlcov/
 # Environment variables
 .env
 
+# Local vector database and data
+data/
+*.db

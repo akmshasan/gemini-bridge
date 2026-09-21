@@ -1,10 +1,10 @@
-"""FastAPI Agent Gateway application entry point."""
+"""FastAPI Gemini Bridge application entry point."""
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from agent_gateway.api.v1.router import api_router
-from agent_gateway.core.config import get_settings
+from gemini_bridge.api.v1.router import api_router
+from gemini_bridge.core.config import get_settings
 
 settings = get_settings()
 

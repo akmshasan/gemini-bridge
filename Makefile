@@ -15,7 +15,7 @@ lock: ## Update and lock dependencies
 	uv lock
 
 run: ## Run the application
-	uv run agent-gateway
+	uv run gemini-bridge
 
 test: ## Run test suite
 	uv run pytest

@@ -4,8 +4,8 @@ from fastapi.testclient import TestClient
 import pytest
 from pytest_mock import MockerFixture
 
-from agent_gateway.main import app
-from agent_gateway.services.gemini import GeminiService
+from gemini_bridge.main import app
+from gemini_bridge.services.gemini import GeminiService
 
 client = TestClient(app)
 

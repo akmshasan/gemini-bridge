@@ -2,8 +2,8 @@
 
 from fastapi import APIRouter
 
-from agent_gateway.api.v1.endpoints.chat import router as chat_router
-from agent_gateway.api.v1.endpoints.rag import router as rag_router
+from gemini_bridge.api.v1.endpoints.chat import router as chat_router
+from gemini_bridge.api.v1.endpoints.rag import router as rag_router
 
 api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(chat_router)

@@ -1,13 +1,13 @@
 """Retrieval-Augmented Generation (RAG) orchestrator service."""
 
-from agent_gateway.core.config import Settings, get_settings
-from agent_gateway.schemas.rag import (
+from gemini_bridge.core.config import Settings, get_settings
+from gemini_bridge.schemas.rag import (
     DocumentListResponse,
     IngestResponse,
     RAGQueryResponse,
 )
-from agent_gateway.services.gemini import GeminiService
-from agent_gateway.services.vector_store import VectorStoreService
+from gemini_bridge.services.gemini import GeminiService
+from gemini_bridge.services.vector_store import VectorStoreService
 
 
 class RAGService:

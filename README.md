@@ -1,6 +1,6 @@
-# Agent Gateway
+# Gemini Bridge
 
-> **Embedded AI / LLM Agent Gateway & RAG Service powered by Google Gemini and FastAPI.**  
+> **Embedded AI / LLM Gemini Bridge & RAG Service powered by Google Gemini and FastAPI.**  
 > 100% local, zero Docker dependencies, sub-second responses, and in-process vector search.
 
 ---

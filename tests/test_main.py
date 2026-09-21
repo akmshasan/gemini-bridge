@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 from pytest_mock import MockerFixture
 
-from agent_gateway import main
-from agent_gateway.main import app
+from gemini_bridge import main
+from gemini_bridge.main import app
 
 client = TestClient(app)
 
@@ -11,7 +11,7 @@ def test_read_root() -> None:
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
-    assert "Agent Gateway" in data["message"]
+    assert "Gemini Bridge" in data["message"]
     assert data["version"] == "0.1.0"
     assert data["docs"] == "/docs"
 
@@ -36,7 +36,7 @@ def test_main(mocker: MockerFixture) -> None:
     mock_run = mocker.patch("uvicorn.run")
     main()
     mock_run.assert_called_once_with(
-        "agent_gateway.main:app",
+        "gemini_bridge.main:app",
         host="0.0.0.0",
         port=8000,
         reload=True,

@@ -1,4 +1,4 @@
-# Agent Gateway: Architecture & Day-to-Day Practical Guide
+# Gemini Bridge: Architecture & Day-to-Day Practical Guide
 
 An embedded, high-performance AI Gateway & Retrieval-Augmented Generation (RAG) backend powered by **FastAPI** and **Google Gemini 2.0 / Flash**. 
 
@@ -6,9 +6,9 @@ Designed to run **100% locally** on your machine with **zero Docker requirements
 
 ---
 
-## 1. What Is Agent Gateway?
+## 1. What Is Gemini Bridge?
 
-Agent Gateway is your local intelligence bridge. Instead of scattering bespoke LLM calls, API keys, and prompt logic across multiple scripts, Agent Gateway centralizes all your AI tasks into a single, high-speed, local API service on `localhost:8000`.
+Gemini Bridge is your local intelligence bridge. Instead of scattering bespoke LLM calls, API keys, and prompt logic across multiple scripts, Gemini Bridge centralizes all your AI tasks into a single, high-speed, local API service on `localhost:8000`.
 
 ### Key Capabilities
 - **Direct LLM Generation & SSE Streaming**: Sub-second text completions and real-time token streaming using Gemini Flash (`gemini-3.6-flash`).
@@ -30,7 +30,7 @@ Agent Gateway is your local intelligence bridge. Instead of scattering bespoke L
                                                     │ HTTP / SSE
                                                     ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                       Agent Gateway (Port 8000)                                        │
+│                                       Gemini Bridge (Port 8000)                                        │
 │                                                                                                        │
 │  ┌───────────────────────┐   ┌──────────────────────────┐   ┌────────────────────────────────────────┐  │
 │  │   /health & /ready    │   │  /api/v1/chat/generate   │   │  /api/v1/rag/ingest                    │  │
@@ -61,11 +61,11 @@ Agent Gateway is your local intelligence bridge. Instead of scattering bespoke L
 
 ### Use Case 1: Your Personal "Second Brain" Search Engine
 - **The Problem**: You have project notes, system designs, README files, or meeting notes spread across directories, but searching via keyword search (`grep` or Spotlight) misses synonyms and conceptual relationships.
-- **How Agent Gateway Solves It**: Ingest your notes into `/api/v1/rag/ingest`. Ask complex questions via `/api/v1/rag/query`. The service retrieves the relevant sections and synthesizes an answer with exact source citations.
+- **How Gemini Bridge Solves It**: Ingest your notes into `/api/v1/rag/ingest`. Ask complex questions via `/api/v1/rag/query`. The service retrieves the relevant sections and synthesizes an answer with exact source citations.
 
 ### Use Case 2: Instant Terminal AI Copilot
 - **The Problem**: You frequently need quick code explanations, shell command help, or regex generation without opening a browser tab and losing terminal focus.
-- **How Agent Gateway Solves It**: Create a bash/zsh alias calling `/api/v1/chat/stream` or `/api/v1/chat/generate` directly from your command line:
+- **How Gemini Bridge Solves It**: Create a bash/zsh alias calling `/api/v1/chat/stream` or `/api/v1/chat/generate` directly from your command line:
   ```bash
   # In your ~/.zshrc:
   ask() {
@@ -82,7 +82,7 @@ Agent Gateway is your local intelligence bridge. Instead of scattering bespoke L
 
 ### Use Case 3: Summarize & Extract from Files / URLs
 - **The Problem**: Long log outputs, JSON dumps, or technical articles take too long to scan manually.
-- **How Agent Gateway Solves It**: Pipe text directly into the gateway for structured extraction:
+- **How Gemini Bridge Solves It**: Pipe text directly into the gateway for structured extraction:
   ```bash
   cat error.log | curl -s -X POST http://localhost:8000/api/v1/chat/generate \
     -H "Content-Type: application/json" \
@@ -96,7 +96,7 @@ Agent Gateway is your local intelligence bridge. Instead of scattering bespoke L
 
 ## 4. API Reference & cURL Examples
 
-Ensure the service is running (`make run` or `uv run agent-gateway`).
+Ensure the service is running (`make run` or `uv run gemini-bridge`).
 
 ### 1. Health & Readiness
 ```bash

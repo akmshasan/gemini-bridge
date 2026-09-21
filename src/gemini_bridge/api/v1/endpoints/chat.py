@@ -7,12 +7,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 
-from agent_gateway.core.config import Settings, get_settings
-from agent_gateway.schemas.chat import (
+from gemini_bridge.core.config import Settings, get_settings
+from gemini_bridge.schemas.chat import (
     ChatCompletionRequest,
     ChatCompletionResponse,
 )
-from agent_gateway.services.gemini import GeminiService
+from gemini_bridge.services.gemini import GeminiService
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 

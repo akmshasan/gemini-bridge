@@ -6,7 +6,7 @@ from collections.abc import AsyncGenerator
 from google import genai
 from google.genai import types
 
-from agent_gateway.core.config import Settings, get_settings
+from gemini_bridge.core.config import Settings, get_settings
 
 
 class GeminiService:

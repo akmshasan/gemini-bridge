@@ -6,8 +6,8 @@ from typing import Any
 
 import chromadb
 
-from agent_gateway.core.config import Settings, get_settings
-from agent_gateway.schemas.rag import DocumentChunkResult, DocumentListItem
+from gemini_bridge.core.config import Settings, get_settings
+from gemini_bridge.schemas.rag import DocumentChunkResult, DocumentListItem
 
 _PREVIEW_LENGTH = 120
 

@@ -9,9 +9,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings loaded from environment variables and .env file."""
 
-    app_name: str = "Agent Gateway"
+    app_name: str = "Gemini Bridge"
     version: str = "0.1.0"
-    description: str = "AI / LLM Agent Gateway & RAG Service powered by Google Gemini and FastAPI"
+    description: str = "AI / LLM Gemini Bridge & RAG Service powered by Google Gemini and FastAPI"
 
     # Gemini API configuration
     gemini_api_key: str = ""

@@ -1,7 +1,7 @@
 [project]
-name = "agent-gateway"
+name = "gemini-bridge"
 version = "0.1.0"
-description = "AI / LLM Agent Gateway & RAG Service powered by Google Gemini and FastAPI"
+description = "AI / LLM Gemini Bridge & RAG Service powered by Google Gemini and FastAPI"
 readme = "README.md"
 authors = [{ name = "A K M Shafiul Hasan", email = "akmshasan@gmail.com" }]
 requires-python = ">=3.14"
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-agent-gateway = "agent_gateway:main"
+gemini-bridge = "gemini_bridge:main"
 
 [build-system]
 requires = ["uv_build>=0.12.13,<0.13.0"]

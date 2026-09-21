@@ -1,0 +1,17 @@
+services:
+  gemini-bridge:
+    build: .
+    container_name: gemini-bridge
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.6-flash}
+      - GEMINI_EMBEDDING_MODEL=${GEMINI_EMBEDDING_MODEL:-gemini-embedding-2}
+      - CHROMA_PERSIST_DIR=/app/data/chroma
+    volumes:
+      - chroma_data:/app/data/chroma
+    restart: unless-stopped
+
+volumes:
+  chroma_data:

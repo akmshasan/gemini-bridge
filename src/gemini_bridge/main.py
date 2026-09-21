@@ -1,10 +1,12 @@
 """FastAPI Gemini Bridge application entry point."""
 
-from fastapi import FastAPI
+from typing import Annotated
+
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from gemini_bridge.api.v1.router import api_router
-from gemini_bridge.core.config import get_settings
+from gemini_bridge.core.config import Settings, get_settings
 
 settings = get_settings()
 
@@ -28,11 +30,13 @@ app.include_router(api_router)
 
 
 @app.get("/")
-def read_root() -> dict[str, str]:
+def read_root(
+    current_settings: Annotated[Settings, Depends(get_settings)],
+) -> dict[str, str]:
     """Return welcome metadata and link to interactive API docs."""
     return {
-        "message": f"Welcome to {settings.app_name}!",
-        "version": settings.version,
+        "message": f"Welcome to {current_settings.app_name}!",
+        "version": current_settings.version,
         "docs": "/docs",
         "health": "/health",
         "ready": "/ready",
@@ -46,9 +50,11 @@ def health_check() -> dict[str, str]:
 
 
 @app.get("/ready")
-def ready_check() -> dict[str, str]:
+def ready_check(
+    current_settings: Annotated[Settings, Depends(get_settings)],
+) -> dict[str, str]:
     """Return application readiness status."""
-    has_key = bool(settings.gemini_api_key)
+    has_key = bool(current_settings.gemini_api_key)
     return {
         "status": "ready" if has_key else "not_configured",
         "gemini_api_key_configured": str(has_key),

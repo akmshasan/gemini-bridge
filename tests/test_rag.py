@@ -1,4 +1,6 @@
+import os
 from pathlib import Path
+from unittest import mock
 
 from fastapi.testclient import TestClient
 import pytest
@@ -23,6 +25,85 @@ def test_chunk_text_logic() -> None:
     assert service.chunk_text("") == []
 
 
+def test_vector_store_empty_collection(tmp_path: Path) -> None:
+    """Test vector store search and add on empty state."""
+    settings = Settings(chroma_persist_dir=str(tmp_path))
+    service = VectorStoreService(settings=settings)
+
+    assert service.add_document([], "test.md", []) == []
+    assert service.search([0.1] * 128) == []
+
+
+@pytest.mark.asyncio
+async def test_rag_ingest_empty_text(mocker: MockerFixture, tmp_path: Path) -> None:
+    """Test ingesting empty or whitespace-only content."""
+    test_settings = Settings(
+        gemini_api_key="mock_key",
+        chroma_persist_dir=str(tmp_path),
+    )
+    app.dependency_overrides[get_settings] = lambda: test_settings
+
+    try:
+        response = client.post(
+            "/api/v1/rag/ingest",
+            json={"content": "   ", "source": "empty.txt"},
+        )
+        assert response.status_code == 201
+        data = response.json()
+        assert data["chunks_count"] == 0
+        assert "No content to ingest" in data["message"]
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_rag_query_empty_knowledge_base_fallback(mocker: MockerFixture, tmp_path: Path) -> None:
+    """Test query fallback response when knowledge base has no documents."""
+    test_settings = Settings(
+        gemini_api_key="mock_key",
+        chroma_persist_dir=str(tmp_path),
+    )
+    app.dependency_overrides[get_settings] = lambda: test_settings
+
+    dummy_embedding = [0.1] * 128
+    mocker.patch.object(GeminiService, "get_embedding", return_value=dummy_embedding)
+    mocker.patch.object(
+        GeminiService,
+        "generate_text",
+        return_value="Direct answer since no documents are stored.",
+    )
+
+    try:
+        response = client.post(
+            "/api/v1/rag/query",
+            json={"question": "What is Python?"},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["answer"] == "Direct answer since no documents are stored."
+        assert data["context_chunks"] == []
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_rag_missing_api_key() -> None:
+    """Test calling RAG endpoints when API key is missing."""
+    with mock.patch.dict(os.environ, {"GEMINI_API_KEY": "", "GOOGLE_API_KEY": ""}, clear=False):
+        test_settings = Settings(gemini_api_key="")
+        app.dependency_overrides[get_settings] = lambda: test_settings
+
+        try:
+            response = client.post(
+                "/api/v1/rag/ingest",
+                json={"content": "some test text", "source": "test.txt"},
+            )
+            assert response.status_code == 500
+            assert "GEMINI_API_KEY is not configured" in response.json()["detail"]
+        finally:
+            app.dependency_overrides.clear()
+
+
 @pytest.mark.asyncio
 async def test_rag_ingest_and_query_flow(mocker: MockerFixture, tmp_path: Path) -> None:
     """Test full ingestion, document listing, query, and clearing lifecycle."""
@@ -34,7 +115,12 @@ async def test_rag_ingest_and_query_flow(mocker: MockerFixture, tmp_path: Path) 
 
     dummy_embedding = [0.1] * 128
 
-    async def mock_get_embeddings(self: object, texts: list[str], *args: object, **kwargs: object) -> list[list[float]]:
+    async def mock_get_embeddings(
+        self: object,
+        texts: list[str],
+        *args: object,
+        **kwargs: object,
+    ) -> list[list[float]]:
         return [dummy_embedding for _ in texts]
 
     mocker.patch.object(GeminiService, "get_embeddings", mock_get_embeddings)

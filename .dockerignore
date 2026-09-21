@@ -1,0 +1,14 @@
+.venv
+.git
+.gitignore
+.pytest_cache
+.ruff_cache
+.coverage
+htmlcov
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+data/
+.env
+.vscode

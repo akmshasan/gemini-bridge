@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "AI / LLM Gemini Bridge & RAG Service powered by Google Gemini and FastAPI"
 readme = "README.md"
 authors = [{ name = "A K M Shafiul Hasan", email = "akmshasan@gmail.com" }]
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 dependencies = [
     "chromadb>=1.5.9",
     "fastapi>=0.141.1",
@@ -32,12 +32,25 @@ dev = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py314"
 extend-exclude = ["migrations", "tests"]
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["PLR0913", "PLR0917", "CPY001", "D100", "D104", "S104", "COM812", "D203", "D213"]
+ignore = [
+    "PLR0913",
+    "PLR0917",
+    "CPY001",
+    "D100",
+    "D104",
+    "S104",
+    "COM812",
+    "D203",
+    "D213",
+    "TC001",
+    "TC002",
+    "TC003",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/*" = ["T201", "EXE001", "PLR2004"]

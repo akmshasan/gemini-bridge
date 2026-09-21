@@ -61,7 +61,7 @@ async def stream_chat(
 ) -> StreamingResponse:
     """Stream completion tokens in real-time via Server-Sent Events (SSE)."""
 
-    async def event_generator() -> AsyncGenerator[str, None]:
+    async def event_generator() -> AsyncGenerator[str]:
         try:
             async for chunk in service.generate_stream(
                 prompt=request.prompt,

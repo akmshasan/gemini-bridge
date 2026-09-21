@@ -46,7 +46,7 @@ class GeminiService:
         system_instruction: str | None = None,
         model: str | None = None,
         temperature: float | None = None,
-    ) -> AsyncGenerator[str, None]:
+    ) -> AsyncGenerator[str]:
         """Stream generated text chunks asynchronously as they arrive."""
         target_model = model or self.settings.gemini_model
         config = types.GenerateContentConfig(

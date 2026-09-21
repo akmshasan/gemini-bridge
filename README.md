@@ -1,7 +1,7 @@
 # Gemini Bridge
 
 [![CI](https://github.com/akmshasan/gemini-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/akmshasan/gemini-bridge/actions/workflows/ci.yml)
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
@@ -24,7 +24,7 @@
 ## Quickstart
 
 ### 1. Prerequisites
-- Python 3.10+ (compatible up to Python 3.14)
+- Python 3.14
 - [uv](https://github.com/astral-sh/uv) (fast Python package manager)
 - Google Gemini API key (get a free key at [Google AI Studio](https://aistudio.google.com/app/apikey))
 

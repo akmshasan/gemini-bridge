@@ -13,6 +13,14 @@ from gemini_bridge.services.gemini import GeminiService
 client = TestClient(app)
 
 
+@pytest.fixture(autouse=True)
+def _setup_test_settings() -> AsyncGenerator[None, None]:
+    test_settings = Settings(gemini_api_key="mock_test_key")
+    app.dependency_overrides[get_settings] = lambda: test_settings
+    yield
+    app.dependency_overrides.clear()
+
+
 @pytest.mark.asyncio
 async def test_chat_generate_success(mocker: MockerFixture) -> None:
     """Test generating a chat response."""
@@ -65,15 +73,12 @@ async def test_chat_missing_api_key() -> None:
     with mock.patch.dict(os.environ, {"GEMINI_API_KEY": "", "GOOGLE_API_KEY": ""}, clear=False):
         test_settings = Settings(gemini_api_key="")
         app.dependency_overrides[get_settings] = lambda: test_settings
-        try:
-            response = client.post(
-                "/api/v1/chat/generate",
-                json={"prompt": "Should fail"},
-            )
-            assert response.status_code == 500
-            assert "GEMINI_API_KEY is not configured" in response.json()["detail"]
-        finally:
-            app.dependency_overrides.clear()
+        response = client.post(
+            "/api/v1/chat/generate",
+            json={"prompt": "Should fail"},
+        )
+        assert response.status_code == 500
+        assert "GEMINI_API_KEY is not configured" in response.json()["detail"]
 
 
 @pytest.mark.asyncio

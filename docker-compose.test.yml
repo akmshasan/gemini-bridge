@@ -1,0 +1,17 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.1
+    container_name: qdrant-test
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_test_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  qdrant_test_data:

@@ -1,17 +1,69 @@
 services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.1
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - gemini-bridge-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4317:4317"    # OTLP gRPC receiver
+      - "4318:4318"    # OTLP HTTP receiver
+    networks:
+      - gemini-bridge-network
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+
   gemini-bridge:
     build: .
     container_name: gemini-bridge
     ports:
       - "8000:8000"
     environment:
+      # Gemini API
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.6-flash}
-      - GEMINI_EMBEDDING_MODEL=${GEMINI_EMBEDDING_MODEL:-gemini-embedding-2}
-      - CHROMA_PERSIST_DIR=/app/data/chroma
-    volumes:
-      - chroma_data:/app/data/chroma
-    restart: unless-stopped
+      - GEMINI_MODEL=${GEMINI_MODEL}
+      - GEMINI_EMBEDDING_MODEL=${GEMINI_EMBEDDING_MODEL}
+
+      # Qdrant Vector Store
+      - QDRANT_URL=http://qdrant:6333
+      - QDRANT_API_KEY=${QDRANT_API_KEY:-}
+      - COLLECTION_NAME=${COLLECTION_NAME}
+
+      # Chunking Settings
+      - DEFAULT_CHUNK_SIZE=${DEFAULT_CHUNK_SIZE}
+      - DEFAULT_CHUNK_OVERLAP=${DEFAULT_CHUNK_OVERLAP}
+
+      # Server Configuration
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=${SERVER_PORT}
+      - ENVIRONMENT=${ENVIRONMENT}
+
+      # Logging & Tracing
+      - RUST_LOG=${RUST_LOG:-info}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+
+      # CORS
+      - CORS_ORIGINS=${CORS_ORIGINS}
+
+    depends_on:
+      - qdrant
+      - jaeger
+
+    networks:
+      - gemini-bridge-network
 
 volumes:
-  chroma_data:
+  qdrant_data:
+
+networks:
+  gemini-bridge-network:
+    driver: bridge

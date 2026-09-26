@@ -1,23 +1,29 @@
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+# Rust
+/target/
+Cargo.lock
+**/*.rs.bk
 
-# Virtual environments
-.venv
-
-# Testing & Linting
-.coverage*
-htmlcov/
-.pytest_cache/
-.ruff_cache/
-
-# Environment variables
+# Environment
 .env
+.env.local
+.env.*.local
 
-# Local vector database and data
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Data
 data/
-*.db
+qdrant_data/
+
+# OS
+.DS_Store
+Thumbs.db

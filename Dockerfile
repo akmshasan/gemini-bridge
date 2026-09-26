@@ -1,31 +1,48 @@
-FROM python:3.14-slim
-
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# Build stage
+FROM rust:1.98.1 as builder
 
 WORKDIR /app
 
-# Enable bytecode compilation
-ENV UV_COMPILE_BYTECODE=1
+COPY Cargo.toml Cargo.lock* ./
+RUN mkdir src && echo "fn main() {}" > src/main.rs
 
-# Copy dependency definition files
-COPY pyproject.toml uv.lock ./
+# Cache dependencies
+RUN cargo build --release 2>&1 | grep -v "warning\|error\[" || true
+RUN rm -rf src
 
-# Install project dependencies without project itself
-RUN uv sync --frozen --no-install-project --no-dev
+# Copy source code
+COPY src ./src
 
-# Copy application source code and documentation
-COPY src/ ./src/
-COPY README.md ./
+# Build application
+RUN cargo build --release
 
-# Install project
-RUN uv sync --frozen --no-dev
+# Runtime stage
+FROM debian:bookworm-slim
 
-# Create data directory for ChromaDB persistence
-RUN mkdir -p /app/data/chroma
+WORKDIR /app
 
-ENV PATH="/app/.venv/bin:$PATH"
-ENV CHROMA_PERSIST_DIR="/app/data/chroma"
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
+# Copy binary from builder
+COPY --from=builder /app/target/release/gemini_bridge /usr/local/bin/
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Expose port
 EXPOSE 8000
 
-CMD ["uvicorn", "gemini_bridge.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Set environment
+ENV RUST_LOG=info
+ENV SERVER_HOST=0.0.0.0
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run application
+CMD ["gemini_bridge"]

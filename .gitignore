@@ -23,6 +23,7 @@ logs/
 # Data
 data/
 qdrant_data/
+coverage/
 
 # OS
 .DS_Store
